@@ -100,6 +100,7 @@ int main(int argc, char* argv[])
 
     auto measure_entropy_cutoff = input.getReal("measure_entropy_cutoff",1e-14);
     auto measure_entropy_maxdim = input.getReal("measure_entropy_maxdim",std::numeric_limits<int>::max());
+    auto measure_occ_correlation = input.getYesNo("measure_occ_correlation", false);
 
     auto UseSVD        = input.getYesNo("UseSVD",true);
     auto SVDmethod     = input.getString("SVDMethod","gesdd");  // can be also "ITensor"
@@ -323,14 +324,17 @@ int main(int argc, char* argv[])
             cout << "\tEE = " << EE << endl;
         }
         // Measure occupation correlation
-        timer["occ corr"].start();
-        for(const auto& [ij, mpo] : nnmpos)
+        if (measure_occ_correlation)
         {
-            auto [i,j] = ij;
-            Real nn = real (innerC (psi, mpo, psi));
-            cout << "\tnn " << i << " " << j << " = " << nn << endl;
+            timer["occ corr"].start();
+            for(const auto& [ij, mpo] : nnmpos)
+            {
+                auto [i,j] = ij;
+                Real nn = real (innerC (psi, mpo, psi));
+                cout << "\tnn " << i << " " << j << " = " << nn << endl;
+            }
+            timer["occ corr"].stop();
         }
-        timer["occ corr"].stop();
 
         step++;
         if (write)
