@@ -75,7 +75,7 @@ void TDVPObserver<SitesType> :: measure (const Args& args)
 
         // Entanglement entropy
         Real S = EntangEntropy (spectrum());
-        cout << "\t*entS " << oc << " " << S << endl;
+        //cout << "\t*entS " << oc << " " << S << endl;
 
         if (oc == _charge_site)
         {
