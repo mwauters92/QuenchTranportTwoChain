@@ -10,7 +10,8 @@ basic
     t_contactR_dn = 0.2
     mu_leadL = 0
     mu_leadR = 0
-    mu_device = 0
+    mu_device_up = 0
+    mu_device_down=0
     Delta = 0.5
     Ec = 0.5
     Ng = 0
@@ -39,6 +40,7 @@ basic
     Truncate = yes
 
     measure_entropy_cutoff = 1e-4
+    measure_occ_correlation = no
 
     write = yes
     write_dir = .
