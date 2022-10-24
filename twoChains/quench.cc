@@ -173,7 +173,8 @@ int main(int argc, char* argv[])
         auto tcR_dn     = input.getReal("t_contactR_dn");
         auto mu_leadL   = input.getReal("mu_leadL");
         auto mu_leadR   = input.getReal("mu_leadR");
-        auto mu_device  = input.getReal("mu_device");
+        auto mu_device_up = input.getReal("mu_device_up");
+        auto mu_device_down = input.getReal("mu_device_down");
         auto mu_biasL_up = input.getReal("mu_biasL_up");
         auto mu_biasL_dn = input.getReal("mu_biasL_dn");
         auto mu_biasR_up = input.getReal("mu_biasR_up");
@@ -199,8 +200,8 @@ int main(int argc, char* argv[])
 
         // Create basis for scatterer
         cout << "H dev" << endl;
-        scatt_up = BdGBasis ("Sup", L_device, t_device, mu_device, Delta);
-        scatt_dn = BdGBasis ("Sdn", L_device, t_device, mu_device, Delta);
+        scatt_up = BdGBasis ("Sup", L_device, t_device, mu_device_up, Delta);
+        scatt_dn = BdGBasis ("Sdn", L_device, t_device, mu_device_down, Delta);
 
         // Create basis for the charge site
         charge = OneParticleBasis ("C", 1);
@@ -263,7 +264,7 @@ int main(int argc, char* argv[])
                                                 0., 0., 0., 0., Ec, Ng,
                                                 sites, maxCharge, to_glob);
             psi.position(1);
-            itensor::Real en0 = dmrg (psi, H0, sweeps_DMRG);
+            itensor::Real en0 = dmrg (psi, H0, sweeps_DMRG,{"Quiet",true} );
             cout << "Initial energy = " << en0 << endl;
 
             // Make Hamiltonian MPO for time evolution
@@ -360,7 +361,7 @@ int main(int argc, char* argv[])
         auto jj_dnup = real (innerC (psi, prime(jmpoL_dn), jmpoR_up, psi));
         auto jj_dndn = real (innerC (psi, prime(jmpoL_dn), jmpoR_dn, psi));
         cout << "\tI L/R = " << jL_up << " " << jL_dn << " " << jR_up << " " << jR_dn << endl;
-        cout << "\tII up,up/up,dn/dn,up/dn,dn = " << jj_upup << " " << jj_updn << " " << jj_dnup << " " << jj_dndn << endl;
+        cout << "\tII Lup,Rup / Lup,Rdn / Ldn,Rup / Ldn,Rdn = " << jj_upup << " " << jj_updn << " " << jj_dnup << " " << jj_dndn << endl;
         timer["current mps"].stop();
 
         // Measure entanglement entropy
