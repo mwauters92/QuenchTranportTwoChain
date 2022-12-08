@@ -229,12 +229,18 @@ int main(int argc, char* argv[])
         sites = MixedBasis (N, scatter_sites, charge_site, args_basis);
         cout << "charge site = " << charge_site << endl;
 
+        auto Ng_test = Ng ;
+        if (Delta == 0.0)
+        {
+            Ng_test = 1.0;
+        }
+
         if (quench_type == "density_quench")
         {
             // Initialze MPS
             // psi: Ground state of disconnected leads and scatterer with bias potentials
             psi = get_ground_state_BdG_scatter (leadL_up, leadL_dn, leadR_up, leadR_dn, scatt_up, scatt_dn,
-                                                mu_biasL_up, mu_biasL_dn, mu_biasR_up, mu_biasR_dn, Ec, Ng,
+                                                mu_biasL_up, mu_biasL_dn, mu_biasR_up, mu_biasR_dn, Ec, Ng_test,
                                                 sites, maxCharge, to_glob);
             psi.position(1);
 
@@ -261,7 +267,7 @@ int main(int argc, char* argv[])
 
             // Initialze MPS which is the ground state of H0
             psi = get_ground_state_BdG_scatter (leadL_up, leadL_dn, leadR_up, leadR_dn, scatt_up, scatt_dn,
-                                                0., 0., 0., 0., Ec, Ng,
+                                                0., 0., 0., 0., Ec, Ng_test,
                                                 sites, maxCharge, to_glob);
             psi.position(1);
             itensor::Real en0 = dmrg (psi, H0, sweeps_DMRG,{"Quiet",true} );
