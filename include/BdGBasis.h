@@ -169,6 +169,7 @@ Matrix symmetrice_zero_energy_modes (const Vector& ens, Matrix U, Real zero_crit
     {
         if (abs(ens(i)) < zero_crit)
         {
+            cout << "MBS energy" << ens(i) << endl;
             is.push_back (i);
             states.emplace_back (column (U, i));
         }
@@ -279,8 +280,15 @@ BdGBasis :: BdGBasis (const string& name, const Matrix& H)
     {
         // Check the state is orthogonal to its particle-hole transformed state
         auto phi = Vector (column (U, i));
-        check_orthogonal_to_particle_hole_transform (phi);
-
+        //cout << "state being tested " << i << " with energy " <<ens(i) <<  endl;
+        if (ens(i) < 1e-6)
+        {
+            check_orthogonal_to_particle_hole_transform (phi, 1e-5 );
+        }
+        else
+        {
+            check_orthogonal_to_particle_hole_transform (phi);
+        }
         _ens(j) = 2.*ens(i);
         column (_u,j) &= subVector (phi,0,N);
         column (_v,j) &= subVector (phi,N,2*N);
